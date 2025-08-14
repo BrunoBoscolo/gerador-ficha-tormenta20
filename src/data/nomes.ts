@@ -150,6 +150,14 @@ export const nomes: {
       'Hjardgala',
     ],
   },
+  Duende: {
+    Homem: [
+      'Puck', 'Oberon', 'Pip', 'Zephyr', 'Glimmer', 'Moss', 'Thorn', 'Bramble', 'Ripple', 'Whisper'
+    ],
+    Mulher: [
+      'Titania', 'Mab', 'Willow', 'Pixie', 'Bloom', 'Fern', 'Crystal', 'Dewdrop', 'Luna', 'Breeze'
+    ]
+  },
   Dahllan: {
     Homem: [
       'Asterius',

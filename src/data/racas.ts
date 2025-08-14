@@ -17,11 +17,13 @@ import SEREIA from './races/sereia';
 import SILFIDE from './races/silfide';
 import SULFURE from './races/sulfure';
 import TROG from './races/trog';
+import DUENDE from './races/duende';
 import Race from '../interfaces/Race';
 
 const RACAS = [
   AGGELUS,
   ANAO,
+  DUENDE,
   DAHLLAN,
   ELFO,
   GOBLIN,

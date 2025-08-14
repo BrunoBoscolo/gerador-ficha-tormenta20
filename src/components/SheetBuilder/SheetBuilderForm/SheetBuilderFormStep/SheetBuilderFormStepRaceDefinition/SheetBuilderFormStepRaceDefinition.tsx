@@ -29,6 +29,7 @@ import SheetBuildFormStepRaceDefinitionQareen from './SheetBuildFormStepRaceDefi
 import SheetBuilderFormStepRaceDefinitionDahllan from './SheetBuilderFormStepRaceDefinitionDahllan/SheetBuilderFormStepRaceDefinitionDahllan';
 import SheetBuilderFormStepRaceDefinitionDwarf from './SheetBuilderFormStepRaceDefinitionDwarf/SheetBuilderFormStepRaceDefinitionDwarf';
 import SheetBuilderFormStepRaceDefinitionHuman from './SheetBuilderFormStepRaceDefinitionHuman/SheetBuilderFormStepRaceDefinitionHuman';
+import SheetBuilderFormStepRaceDefinitionDuende from './SheetBuilderFormStepRaceDefinitionDuende/SheetBuilderFormStepRaceDefinitionDuende';
 
 export type RaceComponentProps = {
   attributesPreview: AttributePreview[];
@@ -45,6 +46,7 @@ const raceComponents: Record<RaceName, React.FC<RaceComponentProps>> = {
   [RaceName.minotaur]: SheetBuildFormStepRaceDefinitionMinotaur,
   [RaceName.lefeu]: SheetBuildFormStepRaceDefinitionLefeu,
   [RaceName.qareen]: SheetBuildFormStepRaceDefinitionQareen,
+  ['Duende' as RaceName]: SheetBuilderFormStepRaceDefinitionDuende,
 };
 
 const SheetBuilderFormStepRaceDefinition = () => {
