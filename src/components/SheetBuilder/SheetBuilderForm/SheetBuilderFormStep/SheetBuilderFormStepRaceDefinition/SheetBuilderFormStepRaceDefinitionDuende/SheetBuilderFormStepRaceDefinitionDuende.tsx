@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RaceComponentProps } from '../SheetBuilderFormStepRaceDefinition';
-import { Attribute, Attributes, SkillName, Translator, Race, SerializedRace } from 't20-sheet-builder';
+import { Attributes, SkillName, Translator } from 't20-sheet-builder';
+import { Atributo } from '../../../../../../data/atributos';
 import AttributeCheckbox from '../AttributeCheckbox';
 import AttributePreviewItem from '../AttributePreviewItem';
 import ConfirmButton from '@/components/SheetBuilder/SheetBuilderForm/ConfirmButton';
@@ -8,32 +9,6 @@ import { SheetBuilderFormError } from '@/components/SheetBuilder/common/SheetBui
 import { useDispatch } from 'react-redux';
 import { setOptionReady } from '@/store/slices/sheetBuilder/sheetBuilderSliceStepConfirmed';
 import { submitRace } from '@/store/slices/sheetBuilder/sheetBuilderSliceRaceDefinition';
-import { PayloadAction } from '@reduxjs/toolkit';
-
-// Mock/Interim class for Duende until it's added to the library
-class Duende extends Race {
-    constructor(public readonly choices: SerializedDuende['choices']) {
-        super('Duende', { attrs: [] }, []);
-    }
-
-    serialize = (): SerializedDuende => ({
-        ...super.serialize(),
-        name: this.name,
-        choices: this.choices,
-    });
-}
-
-interface SerializedDuende extends SerializedRace {
-    choices: {
-        nature: string;
-        tamanho: string;
-        naturezaAnimalAttr?: Attribute;
-        donsAttrs: Attribute[];
-        powers: string[];
-        tabu: SkillName;
-    }
-}
-
 
 const naturezas = [
   { name: 'Animal', abilities: 'Recebe +1 em um atributo à sua escolha.' },
@@ -48,7 +23,7 @@ const tamanhos = [
     { name: 'Grande', modifiers: '-2 em Furtividade, +2 em manobras', displacement: '9m', penalty: '-1 em Destreza' },
 ];
 
-const allAttributes = Attribute ? Object.values(Attribute) : [];
+const allAttributes = Object.values(Atributo);
 
 const presentes = [
     'Afinidade Elemental', 'Encantar Objetos', 'Enfeitiçar', 'Invisibilidade',
@@ -61,20 +36,19 @@ const tabuSkills: SkillName[] = [SkillName.diplomacy, SkillName.initiative, Skil
 const SheetBuilderFormStepRaceDefinitionDuende: React.FC<RaceComponentProps> = ({
   attributesPreview,
   setAttributeModifiers,
-  confirmRace,
 }) => {
   const dispatch = useDispatch();
   const [selectedNature, setSelectedNature] = useState<string | undefined>();
   const [selectedTamanho, setSelectedTamanho] = useState<string | undefined>();
-  const [naturezaAnimalAttr, setNaturezaAnimalAttr] = useState<Attribute | undefined>();
-  const [donsAttrs, setDonsAttrs] = useState<Attribute[]>([]);
+  const [naturezaAnimalAttr, setNaturezaAnimalAttr] = useState<Atributo | undefined>();
+  const [donsAttrs, setDonsAttrs] = useState<Atributo[]>([]);
   const [selectedPowers, setSelectedPowers] = useState<string[]>([]);
   const [selectedTabu, setSelectedTabu] = useState<SkillName | undefined>();
 
   useEffect(() => {
     const totalModifiers: Partial<Attributes> = {};
-    if (selectedTamanho === 'Minúsculo') totalModifiers.strength = -1;
-    if (selectedTamanho === 'Grande') totalModifiers.dexterity = -1;
+    if (selectedTamanho === 'Minúsculo') totalModifiers[Atributo.FORCA] = -1;
+    if (selectedTamanho === 'Grande') totalModifiers[Atributo.DESTREZA] = -1;
     if (selectedNature === 'Animal' && naturezaAnimalAttr) {
       totalModifiers[naturezaAnimalAttr] = (totalModifiers[naturezaAnimalAttr] || 0) + 1;
     }
@@ -84,7 +58,7 @@ const SheetBuilderFormStepRaceDefinitionDuende: React.FC<RaceComponentProps> = (
     setAttributeModifiers(totalModifiers);
   }, [selectedTamanho, selectedNature, naturezaAnimalAttr, donsAttrs, setAttributeModifiers]);
 
-  const handleSelectDons = (attribute: Attribute) => {
+  const handleSelectDons = (attribute: Atributo) => {
     const currentIndex = donsAttrs.indexOf(attribute);
     const newDons = [...donsAttrs];
     if (currentIndex === -1) {
@@ -95,7 +69,7 @@ const SheetBuilderFormStepRaceDefinitionDuende: React.FC<RaceComponentProps> = (
     setDonsAttrs(newDons);
   };
 
-  const handleSelectNaturezaAnimalAttr = (attribute: Attribute) => {
+  const handleSelectNaturezaAnimalAttr = (attribute: Atributo) => {
     if (donsAttrs.includes(attribute)) {
         const newDons = donsAttrs.filter(attr => attr !== attribute);
         setDonsAttrs(newDons);
@@ -122,23 +96,20 @@ const SheetBuilderFormStepRaceDefinitionDuende: React.FC<RaceComponentProps> = (
     if (selectedPowers.length < 3) throw new SheetBuilderFormError('Selecione 3 Presentes.');
     if (!selectedTabu) throw new SheetBuilderFormError('Selecione a perícia do seu Tabu.');
 
-    const makeDuende = () => new Duende({
-        nature: selectedNature,
-        tamanho: selectedTamanho,
-        naturezaAnimalAttr: naturezaAnimalAttr,
-        donsAttrs: donsAttrs,
-        powers: selectedPowers,
-        tabu: selectedTabu,
-    });
+    const payload = {
+        name: 'Duende',
+        choices: {
+            nature: selectedNature,
+            tamanho: selectedTamanho,
+            naturezaAnimalAttr: naturezaAnimalAttr,
+            donsAttrs: donsAttrs,
+            powers: selectedPowers,
+            tabu: selectedTabu,
+        }
+    };
 
-    const createSubmitAction = (race: Race) => submitRace((race as Duende).serialize());
-
+    dispatch(submitRace(payload as any));
     dispatch(setOptionReady({ key: 'isRaceReady', value: 'confirmed' }));
-    confirmRace<Race, SerializedRace, PayloadAction<SerializedRace>>(
-        makeDuende,
-        createSubmitAction,
-        'isRaceReady'
-    );
   }
 
   return (

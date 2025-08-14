@@ -13,54 +13,18 @@ const DUENDE: Race = {
     {
       name: 'Natureza',
       description: 'Escolha uma de três naturezas: Animal, Vegetal ou Mineral. Cada uma concede habilidades únicas.',
-      sheetActions: [
-        {
-          source: { type: 'power', name: 'Natureza' },
-          action: {
-            type: 'special',
-            specialAction: 'duendeNatureza',
-          },
-        },
-      ],
     },
     {
       name: 'Tamanho',
       description: 'Escolha um de quatro tamanhos: Minúsculo, Pequeno, Médio ou Grande. Cada um afeta seus atributos e deslocamento.',
-      sheetActions: [
-        {
-          source: { type: 'power', name: 'Tamanho' },
-          action: {
-            type: 'special',
-            specialAction: 'duendeTamanho',
-          },
-        },
-      ],
     },
     {
       name: 'Dons',
       description: 'Você recebe +1 em dois atributos diferentes à sua escolha. Se sua natureza for Animal, pode acumular um bônus para +2 total.',
-      sheetActions: [
-        {
-          source: { type: 'power', name: 'Dons' },
-          action: {
-            type: 'special',
-            specialAction: 'duendeDons',
-          },
-        },
-      ],
     },
     {
       name: 'Presentes de Magia e de Caos',
       description: 'Escolha três poderes da lista de presentes. A CD para resistência é baseada em Carisma.',
-      sheetActions: [
-        {
-          source: { type: 'power', name: 'Presentes de Magia e de Caos' },
-          action: {
-            type: 'special',
-            specialAction: 'duendePresentes',
-          },
-        },
-      ],
     },
     // Limitações
     {
@@ -74,15 +38,6 @@ const DUENDE: Race = {
     {
       name: 'Tabu',
       description: 'Você possui uma regra de comportamento que não pode quebrar. Escolha uma perícia (Diplomacia, Iniciativa, Luta ou Percepção) para sofrer -5 de penalidade. Quebrar o tabu tem consequências severas.',
-      sheetActions: [
-        {
-          source: { type: 'power', name: 'Tabu' },
-          action: {
-            type: 'special',
-            specialAction: 'duendeTabu', // For choosing the penalized skill
-          },
-        },
-      ],
     },
   ],
 };
