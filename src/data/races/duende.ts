@@ -1,4 +1,6 @@
+import { Atributo } from '../atributos';
 import Race from '../../interfaces/Race';
+import { RACE_SIZES } from './raceSizes/raceSizes';
 
 const DUENDE: Race = {
   name: 'Duende',
@@ -40,6 +42,81 @@ const DUENDE: Race = {
       description: 'Você possui uma regra de comportamento que não pode quebrar. Escolha uma perícia (Diplomacia, Iniciativa, Luta ou Percepção) para sofrer -5 de penalidade. Quebrar o tabu tem consequências severas.',
     },
   ],
+  setup: (race, _, choices) => {
+    const newRace = JSON.parse(JSON.stringify(race));
+    if (!choices) {
+      return newRace;
+    }
+    const tabuChoice = choices.tabu;
+    const tamanhoChoice = choices.tamanho;
+
+    if (tabuChoice) {
+      const tabuAbility = newRace.abilities.find(
+        (ability) => ability.name === 'Tabu'
+      );
+      if (tabuAbility) {
+        tabuAbility.description = `Você possui uma regra de comportamento que não pode quebrar. Você sofre -5 de penalidade em ${tabuChoice}. Quebrar o tabu tem consequências severas.`;
+        tabuAbility.sheetBonuses = [
+          {
+            source: {
+              type: 'race',
+              raceName: 'Duende',
+            },
+            target: {
+              type: 'Skill',
+              name: tabuChoice,
+            },
+            modifier: {
+              type: 'Fixed',
+              value: -5,
+            },
+          },
+        ];
+      }
+    }
+
+    if (tamanhoChoice) {
+      const tamanhoAbility = newRace.abilities.find(
+        (ability) => ability.name === 'Tamanho'
+      );
+      if (tamanhoAbility) {
+        tamanhoAbility.description = `Seu tamanho é ${tamanhoChoice}.`;
+      }
+
+      switch (tamanhoChoice) {
+        case 'Minúsculo':
+          newRace.attributes.attrs.push(
+            { attr: Atributo.DESTREZA, mod: 2 },
+            { attr: Atributo.FORCA, mod: -2 }
+          );
+          newRace.getDisplacement = () => 6;
+          newRace.getSize = () => RACE_SIZES.MINUSCULO;
+          break;
+        case 'Pequeno':
+          newRace.attributes.attrs.push(
+            { attr: Atributo.DESTREZA, mod: 1 },
+            { attr: Atributo.FORCA, mod: -1 }
+          );
+          newRace.getDisplacement = () => 9;
+          newRace.getSize = () => RACE_SIZES.PEQUENO;
+          break;
+        case 'Médio':
+          newRace.getDisplacement = () => 9;
+          newRace.getSize = () => RACE_SIZES.MEDIO;
+          break;
+        case 'Grande':
+          newRace.attributes.attrs.push(
+            { attr: Atributo.FORCA, mod: 1 },
+            { attr: Atributo.DESTREZA, mod: -1 }
+          );
+          newRace.getDisplacement = () => 12;
+          newRace.getSize = () => RACE_SIZES.GRANDE;
+          break;
+      }
+    }
+
+    return newRace;
+  },
 };
 
 export default DUENDE;

@@ -90,7 +90,11 @@ export default interface Race {
   };
   abilities: RaceAbility[];
   oldRace?: Race;
-  setup?: (race: Race, allRaces: Race[]) => Race;
+  setup?: (
+    race: Race,
+    allRaces: Race[],
+    choices?: Record<string, string>
+  ) => Race;
   getSize?: (race: Race) => RaceSize;
   getDisplacement?: (race: Race) => number;
   faithProbability?: FaithProbability;
