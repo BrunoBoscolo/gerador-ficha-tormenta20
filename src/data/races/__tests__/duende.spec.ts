@@ -1,5 +1,6 @@
-import { Atributo } from '../../atributos';
 import DUENDE from '../duende';
+import { Atributo } from '../../atributos';
+
 
 describe('Testa as definições da raça Duende', () => {
   test('Deve ter o nome "Duende"', () => {
@@ -285,5 +286,6 @@ describe('Testa o setup da raça Duende', () => {
     // Tabu
     const tabu = received.abilities.find((ability) => ability.name === 'Tabu');
     expect(tabu?.description).toContain('Percepção');
+  
   });
 });

@@ -3,16 +3,20 @@ import Race from '../../interfaces/Race';
 import { RACE_SIZES } from './raceSizes/raceSizes';
 import { PRESENTES } from './duende/presentes';
 
+
 const DUENDE: Race = {
   name: 'Duende',
   attributes: {
+    
     attrs: [], // Bônus de atributo são tratados pela habilidade "Dons".
   },
+
   abilities: [
     {
       name: 'Tipo de Criatura',
       description: 'Você é uma criatura do tipo Espírito.',
     },
+
     {
       name: 'Longevidade',
       description: 'Varia de duende para duende, não segue um ciclo natural.',
@@ -226,6 +230,7 @@ const DUENDE: Race = {
 
     return newRace;
   },
+
 };
 
 export default DUENDE;
