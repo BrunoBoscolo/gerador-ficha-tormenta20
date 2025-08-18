@@ -1,6 +1,7 @@
 import { Atributo } from '../atributos';
 import Race from '../../interfaces/Race';
 import { RACE_SIZES } from './raceSizes/raceSizes';
+import { PRESENTES } from './duende/presentes';
 
 const DUENDE: Race = {
   name: 'Duende',
@@ -42,6 +43,28 @@ const DUENDE: Race = {
       description: 'Você possui uma regra de comportamento que não pode quebrar. Escolha uma perícia (Diplomacia, Iniciativa, Luta ou Percepção) para sofrer -5 de penalidade. Quebrar o tabu tem consequências severas.',
     },
   ],
+  faithProbability: {
+    AHARADAK: 0,
+    OCEANO: 0,
+    TENEBRA: 0,
+    VALKARIA: 0,
+    WYNNA: 1,
+    LENA: 0,
+    SSZZAAS: 0,
+    THYATIS: 0,
+    ARSENAL: 0,
+    TANNATOH: 0,
+    ALLIHANNA: 1,
+    MARAH: 0,
+    KALLYADRANOCH: 0,
+    KHALMYR: 0,
+    THWOR: 0,
+    HYNINN: 1,
+    AZGHER: 0,
+    LINWU: 0,
+    MEGALOKK: 0,
+    NIMB: 1,
+  },
   setup: (race, _, choices) => {
     const newRace = JSON.parse(JSON.stringify(race));
     if (!choices) {
@@ -49,6 +72,68 @@ const DUENDE: Race = {
     }
     const tabuChoice = choices.tabu;
     const tamanhoChoice = choices.tamanho;
+    const naturezaChoice = choices.natureza;
+    const presentesChoices = choices.presentes as string[];
+
+    if (presentesChoices) {
+      const presentesAbility = newRace.abilities.find(
+        (ability) => ability.name === 'Presentes de Magia e de Caos'
+      );
+      if (presentesAbility) {
+        presentesAbility.description = `Você escolheu os seguintes presentes: ${presentesChoices.join(
+          ', '
+        )}.`;
+      }
+      const chosenPresentes = PRESENTES.filter((presente) =>
+        presentesChoices.includes(presente.name)
+      );
+      newRace.abilities.push(...chosenPresentes);
+    }
+
+    if (naturezaChoice) {
+      const naturezaAbility = newRace.abilities.find(
+        (ability) => ability.name === 'Natureza'
+      );
+      if (naturezaAbility) {
+        naturezaAbility.description = `Sua natureza é ${naturezaChoice}.`;
+      }
+
+      switch (naturezaChoice) {
+        case 'Animal':
+          newRace.attributes.attrs.push({ attr: 'any', mod: 1 });
+          break;
+        case 'Vegetal':
+          newRace.abilities.push(
+            {
+              name: 'Natureza Vegetal',
+              description:
+                'Você é imune a atordoamento e metamorfose. É afetado por efeitos que afetam plantas monstruosas; se o efeito não tiver teste de resistência, você tem direito a um teste de Fortitude.',
+            },
+            {
+              name: 'Florescer Feérico',
+              description:
+                'Uma vez por rodada, pode gastar uma quantidade de PM limitada pela sua Constituição para curar 2d8 Pontos de Vida por PM gasto no início do seu próximo turno.',
+            }
+          );
+          break;
+        case 'Mineral':
+          newRace.abilities.push(
+            {
+              name: 'Natureza Mineral',
+              description: 'Você possui imunidade a efeitos de metabolismo.',
+            },
+            {
+              name: 'Resistência Mineral',
+              description: 'Você possui Redução de Dano 5 contra corte, fogo e perfuração.',
+            },
+            {
+              name: 'Restrição Alimentar',
+              description: 'Você não se beneficia de itens da categoria alimentação.',
+            }
+          );
+          break;
+      }
+    }
 
     if (tabuChoice) {
       const tabuAbility = newRace.abilities.find(
@@ -85,19 +170,12 @@ const DUENDE: Race = {
 
       switch (tamanhoChoice) {
         case 'Minúsculo':
-          newRace.attributes.attrs.push(
-            { attr: Atributo.DESTREZA, mod: 2 },
-            { attr: Atributo.FORCA, mod: -2 }
-          );
+          newRace.attributes.attrs.push({ attr: Atributo.FORCA, mod: -1 });
           newRace.getDisplacement = () => 6;
           newRace.getSize = () => RACE_SIZES.MINUSCULO;
           break;
         case 'Pequeno':
-          newRace.attributes.attrs.push(
-            { attr: Atributo.DESTREZA, mod: 1 },
-            { attr: Atributo.FORCA, mod: -1 }
-          );
-          newRace.getDisplacement = () => 9;
+          newRace.getDisplacement = () => 6;
           newRace.getSize = () => RACE_SIZES.PEQUENO;
           break;
         case 'Médio':
@@ -105,15 +183,18 @@ const DUENDE: Race = {
           newRace.getSize = () => RACE_SIZES.MEDIO;
           break;
         case 'Grande':
-          newRace.attributes.attrs.push(
-            { attr: Atributo.FORCA, mod: 1 },
-            { attr: Atributo.DESTREZA, mod: -1 }
-          );
-          newRace.getDisplacement = () => 12;
+          newRace.attributes.attrs.push({ attr: Atributo.DESTREZA, mod: -1 });
+          newRace.getDisplacement = () => 9;
           newRace.getSize = () => RACE_SIZES.GRANDE;
           break;
       }
     }
+
+    // Dons
+    newRace.attributes.attrs.push(
+      { attr: 'any', mod: 1 },
+      { attr: 'any', mod: 1 }
+    );
 
     return newRace;
   },

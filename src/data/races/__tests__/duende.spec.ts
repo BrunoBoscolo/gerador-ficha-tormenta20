@@ -19,7 +19,7 @@ describe('Testa as definições da raça Duende', () => {
   });
 
   test('Deve ter as habilidades de escolha descritas', () => {
-    const nomesHabilidades = DUENDE.abilities.map(a => a.name);
+    const nomesHabilidades = DUENDE.abilities.map((a) => a.name);
     expect(nomesHabilidades).toContain('Natureza');
     expect(nomesHabilidades).toContain('Tamanho');
     expect(nomesHabilidades).toContain('Dons');
@@ -27,7 +27,7 @@ describe('Testa as definições da raça Duende', () => {
   });
 
   test('Deve incluir as três limitações obrigatórias', () => {
-    const nomesHabilidades = DUENDE.abilities.map(a => a.name);
+    const nomesHabilidades = DUENDE.abilities.map((a) => a.name);
     expect(nomesHabilidades).toContain('Aversão a Ferro');
     expect(nomesHabilidades).toContain('Aversão a Sinos');
     expect(nomesHabilidades).toContain('Tabu');
@@ -37,6 +37,7 @@ describe('Testa as definições da raça Duende', () => {
 describe('Testa o setup da raça Duende', () => {
   test('Deve aplicar o Tabu corretamente', () => {
     expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
 
     const choices = { tabu: 'Luta' };
     const received = DUENDE.setup(DUENDE, [], choices);
@@ -57,54 +58,148 @@ describe('Testa o setup da raça Duende', () => {
 
   test('Deve aplicar o tamanho Minúsculo', () => {
     expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
 
+    // O setup de Dons adiciona 2 atributos, por isso o .length é 3
     const choices = { tamanho: 'Minúsculo' };
     const received = DUENDE.setup(DUENDE, [], choices);
 
-    expect(received.attributes.attrs).toEqual([
-      { attr: Atributo.DESTREZA, mod: 2 },
-      { attr: Atributo.FORCA, mod: -2 },
-    ]);
+    expect(received.attributes.attrs).toHaveLength(3);
+    expect(received.attributes.attrs).toContainEqual({ attr: Atributo.FORCA, mod: -1 });
     expect(received.getDisplacement()).toBe(6);
     expect(received.getSize().name).toBe('Minúsculo');
   });
 
   test('Deve aplicar o tamanho Pequeno', () => {
     expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
 
     const choices = { tamanho: 'Pequeno' };
     const received = DUENDE.setup(DUENDE, [], choices);
 
-    expect(received.attributes.attrs).toEqual([
-      { attr: Atributo.DESTREZA, mod: 1 },
-      { attr: Atributo.FORCA, mod: -1 },
-    ]);
-    expect(received.getDisplacement()).toBe(9);
+    expect(received.attributes.attrs).toHaveLength(2);
+    expect(received.getDisplacement()).toBe(6);
     expect(received.getSize().name).toBe('Pequeno');
   });
 
   test('Deve aplicar o tamanho Médio', () => {
     expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
 
     const choices = { tamanho: 'Médio' };
     const received = DUENDE.setup(DUENDE, [], choices);
 
-    expect(received.attributes.attrs).toEqual([]);
+    expect(received.attributes.attrs).toHaveLength(2);
     expect(received.getDisplacement()).toBe(9);
     expect(received.getSize().name).toBe('Médio');
   });
 
   test('Deve aplicar o tamanho Grande', () => {
     expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
 
     const choices = { tamanho: 'Grande' };
     const received = DUENDE.setup(DUENDE, [], choices);
 
-    expect(received.attributes.attrs).toEqual([
-      { attr: Atributo.FORCA, mod: 1 },
-      { attr: Atributo.DESTREZA, mod: -1 },
-    ]);
-    expect(received.getDisplacement()).toBe(12);
+    expect(received.attributes.attrs).toHaveLength(3);
+    expect(received.attributes.attrs).toContainEqual({ attr: Atributo.DESTREZA, mod: -1 });
+    expect(received.getDisplacement()).toBe(9);
     expect(received.getSize().name).toBe('Grande');
+  });
+
+  describe('Testa a escolha de Natureza', () => {
+    test('Deve aplicar a Natureza Animal', () => {
+      expect(DUENDE.setup).toBeDefined();
+      if (!DUENDE.setup) return;
+
+      const choices = { natureza: 'Animal' };
+      const received = DUENDE.setup(DUENDE, [], choices);
+
+      // 1 da natureza + 2 dos dons
+      expect(received.attributes.attrs).toHaveLength(3);
+      expect(received.attributes.attrs).toContainEqual({ attr: 'any', mod: 1 });
+    });
+
+    test('Deve aplicar a Natureza Vegetal', () => {
+      expect(DUENDE.setup).toBeDefined();
+      if (!DUENDE.setup) return;
+
+      const choices = { natureza: 'Vegetal' };
+      const received = DUENDE.setup(DUENDE, [], choices);
+      const abilityNames = received.abilities.map((a) => a.name);
+
+      expect(abilityNames).toContain('Natureza Vegetal');
+      expect(abilityNames).toContain('Florescer Feérico');
+    });
+
+    test('Deve aplicar a Natureza Mineral', () => {
+      expect(DUENDE.setup).toBeDefined();
+      if (!DUENDE.setup) return;
+
+      const choices = { natureza: 'Mineral' };
+      const received = DUENDE.setup(DUENDE, [], choices);
+      const abilityNames = received.abilities.map((a) => a.name);
+
+      expect(abilityNames).toContain('Natureza Mineral');
+      expect(abilityNames).toContain('Resistência Mineral');
+      expect(abilityNames).toContain('Restrição Alimentar');
+    });
+  });
+
+  test('Deve adicionar os bônus de Dons', () => {
+    expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
+
+    const received = DUENDE.setup(DUENDE, [], {});
+    // Apenas os 2 atributos dos dons
+    expect(received.attributes.attrs).toHaveLength(2);
+    expect(received.attributes.attrs).toEqual([
+      { attr: 'any', mod: 1 },
+      { attr: 'any', mod: 1 },
+    ]);
+  });
+
+  test('Deve adicionar os Presentes escolhidos', () => {
+    expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
+
+    const choices = { presentes: ['Voo', 'Língua da Natureza'] };
+    const received = DUENDE.setup(DUENDE, [], choices);
+    const abilityNames = received.abilities.map((a) => a.name);
+
+    expect(abilityNames).toContain('Voo');
+    expect(abilityNames).toContain('Língua da Natureza');
+
+    const lingua = received.abilities.find((a) => a.name === 'Língua da Natureza');
+    expect(lingua?.sheetBonuses).toBeDefined();
+    expect(lingua?.sheetBonuses).toHaveLength(2);
+  });
+
+  test('Deve funcionar com múltiplas escolhas', () => {
+    expect(DUENDE.setup).toBeDefined();
+    if (!DUENDE.setup) return;
+
+    const choices = {
+      natureza: 'Animal',
+      tamanho: 'Grande',
+      presentes: ['Voo'],
+      tabu: 'Percepção',
+    };
+    const received = DUENDE.setup(DUENDE, [], choices);
+    const abilityNames = received.abilities.map((a) => a.name);
+
+    // Tamanho
+    expect(received.getDisplacement()).toBe(9);
+    expect(received.getSize().name).toBe('Grande');
+    // Dons + Natureza Animal + Penalidade de Tamanho
+    expect(received.attributes.attrs).toHaveLength(4);
+    expect(received.attributes.attrs).toContainEqual({ attr: Atributo.DESTREZA, mod: -1 });
+
+    // Presentes
+    expect(abilityNames).toContain('Voo');
+
+    // Tabu
+    const tabu = received.abilities.find((ability) => ability.name === 'Tabu');
+    expect(tabu?.description).toContain('Percepção');
   });
 });
