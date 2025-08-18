@@ -84,7 +84,7 @@ export const PRESENTES: RaceAbility[] = [
   {
     name: 'Visão Feérica',
     description:
-      'Você está permanentemente sob efeito da magia Visão Mística (com o aprimoramento para ver criaturas invisíveis).',
+      'Você recebe visão na penumbra e está permanentemente sob efeito da magia Visão Mística (com o aprimoramento para ver criaturas invisíveis).',
     sheetActions: [
       {
         source: {
@@ -94,6 +94,16 @@ export const PRESENTES: RaceAbility[] = [
         action: {
           type: 'addSense',
           sense: 'Visão na Penumbra',
+        },
+      },
+      {
+        source: {
+          type: 'race',
+          raceName: 'Duende',
+        },
+        action: {
+          type: 'addSense',
+          sense: 'Ver o Invisível',
         },
       },
     ],

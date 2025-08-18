@@ -90,6 +90,9 @@ const DUENDE: Race = {
       newRace.abilities.push(...chosenPresentes);
     }
 
+    const donsAttrs = choices.donsAttrs as Atributo[];
+    const naturezaAnimalAttr = choices.naturezaAnimalAttr as Atributo;
+
     if (naturezaChoice) {
       const naturezaAbility = newRace.abilities.find(
         (ability) => ability.name === 'Natureza'
@@ -100,7 +103,16 @@ const DUENDE: Race = {
 
       switch (naturezaChoice) {
         case 'Animal':
-          newRace.attributes.attrs.push({ attr: 'any', mod: 1 });
+          if (naturezaAnimalAttr) {
+            const existingAttr = newRace.attributes.attrs.find(
+              (a) => a.attr === naturezaAnimalAttr
+            );
+            if (existingAttr) {
+              existingAttr.mod += 1;
+            } else {
+              newRace.attributes.attrs.push({ attr: naturezaAnimalAttr, mod: 1 });
+            }
+          }
           break;
         case 'Vegetal':
           newRace.abilities.push(
@@ -191,10 +203,18 @@ const DUENDE: Race = {
     }
 
     // Dons
-    newRace.attributes.attrs.push(
-      { attr: 'any', mod: 1 },
-      { attr: 'any', mod: 1 }
-    );
+    if (donsAttrs) {
+      donsAttrs.forEach((attr) => {
+        const existingAttr = newRace.attributes.attrs.find(
+          (a) => a.attr === attr
+        );
+        if (existingAttr) {
+          existingAttr.mod += 1;
+        } else {
+          newRace.attributes.attrs.push({ attr, mod: 1 });
+        }
+      });
+    }
 
     return newRace;
   },
