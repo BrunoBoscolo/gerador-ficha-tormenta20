@@ -14,6 +14,10 @@ const DUENDE: Race = {
       description: 'Você é uma criatura do tipo Espírito.',
     },
     {
+      name: 'Longevidade',
+      description: 'Varia de duende para duende, não segue um ciclo natural.',
+    },
+    {
       name: 'Natureza',
       description: 'Escolha uma de três naturezas: Animal, Vegetal ou Mineral. Cada uma concede habilidades únicas.',
     },
@@ -32,15 +36,19 @@ const DUENDE: Race = {
     // Limitações
     {
       name: 'Aversão a Ferro',
-      description: 'Você sofre 1 ponto de dano adicional por dado de dano de armas de ferro/aço e 1d6 de dano por rodada se empunhar ou vestir itens de ferro/aço.',
+      description: 'Sofre 1 ponto de dano adicional por dado de dano de ataques com armas de ferro ou aço. Sofre 1d6 de dano por rodada se estiver empunhando ou vestindo um item de ferro ou aço.',
     },
     {
       name: 'Aversão a Sinos',
-      description: 'Ao ouvir um sino, fica alquebrado e esmorecido até o fim da cena.',
+      description: 'Ao ouvir o badalar de um sino, você fica nas condições alquebrado e esmorecido até o fim da cena. Em ambientes urbanos, há uma chance em seis de ouvir um sino no início de qualquer cena.',
     },
     {
       name: 'Tabu',
-      description: 'Você possui uma regra de comportamento que não pode quebrar. Escolha uma perícia (Diplomacia, Iniciativa, Luta ou Percepção) para sofrer -5 de penalidade. Quebrar o tabu tem consequências severas.',
+      description: 'Possui uma regra de comportamento que nunca pode quebrar. O tabu impõe uma penalidade de -5 em uma perícia à sua escolha (Diplomacia, Iniciativa, Luta ou Percepção). Consequências: 1º Dia de Desrespeito: Fica fatigado por um dia (condição incurável por outros meios). 2º Dia de Desrespeito: Fica exausto. 3º Dia de Desrespeito: Morte.',
+    },
+    {
+      name: 'Sonhos Malucos (Opcional)',
+      description: 'Para uma criação de personagem aleatória, role 1d3 para Natureza, 1d4 para Tamanho, 2d6 para dois bônus de +1 em atributos e 3d12 para três Presentes de Magia e de Caos. Role novamente resultados repetidos. Personagens criados assim começam com +2 Pontos de Mana.',
     },
   ],
   faithProbability: {

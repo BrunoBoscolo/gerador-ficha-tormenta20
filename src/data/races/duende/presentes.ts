@@ -24,7 +24,8 @@ export const PRESENTES: RaceAbility[] = [
   },
   {
     name: 'Língua da Natureza',
-    description: 'Você pode falar com animais e plantas.',
+    description:
+      'Você recebe +2 em Adestramento e Sobrevivência. Você pode falar com animais e plantas.',
     sheetBonuses: [
       {
         source: {
