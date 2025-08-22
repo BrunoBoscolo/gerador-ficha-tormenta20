@@ -3,6 +3,7 @@ import AGGELUS from './races/aggelus';
 import ANAO from './races/anao';
 import DAHLLAN from './races/dahllan';
 import DUENDE from './races/duende';
+import EIRADAAN from './races/eiradaan';
 import ELFO from './races/elfo';
 import GOBLIN from './races/goblin';
 import LEFEU from './races/lefou';
@@ -25,6 +26,7 @@ const RACAS = [
   ANAO,
   DAHLLAN,
   DUENDE,
+  EIRADAAN,
   ELFO,
   GOBLIN,
   LEFEU,
